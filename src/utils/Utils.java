@@ -1,4 +1,6 @@
-package Utils;
+package utils;
+
+import model.Data;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -15,7 +17,7 @@ import java.util.zip.CheckedInputStream;
  **/
 public class Utils {
 //    计算hash值
-    public static String md5HashCode(InputStream fis) {
+    public static String  HashCode(InputStream fis) {
         try {
             //拿到一个MD5转换器,如果想使用SHA-1或SHA-256，则传入SHA-1,SHA-256
             MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -37,21 +39,20 @@ public class Utils {
         }
     }
 
-    public static List<String> split(String src, int fileSize, String dest){
+    public static List<String> split(String src, String dest){
 
-        if("".equals(src)||src==null||fileSize==0||"".equals(dest)||dest==null){
+        if("".equals(src)||src==null||"".equals(dest)||dest==null){
             System.out.println("分割失败");
         }
 
         File srcFile = new File(src);//源文件
 
         long srcSize = srcFile.length();//源文件的大小
-        long destSize = 1024*1024*fileSize;//目标文件的大小（分割后每个文件的大小）
+        long destSize = 102;//目标文件的大小（分割后每个文件的大小）
 
         int number = (int)(srcSize/destSize);
         number = srcSize%destSize==0?number:number+1;//分割后文件的数目
-
-        String fileName = src.substring(src.lastIndexOf("\\"));//源文件名
+        String fileName = "temp";//源文件名
         InputStream in = null;//输入字节流
         BufferedInputStream bis = null;//输入缓冲流
         byte[] bytes = new byte[1024*1024];//每次读取文件的大小为1MB
@@ -94,6 +95,83 @@ public class Utils {
         }
         return list;
     }
+
+    public static List<String> cut(String src,String dest) {
+        File file = new File(src);
+        int num = 3;//分割文件的数量
+        List<String> list=new ArrayList<>();
+
+        long lon = file.length() / num + 1L;//使文件字节数+1，保证取到所有的字节
+        try {
+            RandomAccessFile raf1 = new RandomAccessFile(file, "r");
+
+            byte[] bytes = new byte[1024];//值设置越小，则各个文件的字节数越接近平均值，但效率会降低，这里折中，取1024
+            int len = -1;
+            for (int i = 0; i < num; i++) {
+                String name = dest+File.separator+"temp"+"-"+i+".dat";
+                list.add(name);
+                File file2 = new File(name);
+                RandomAccessFile raf2 = new RandomAccessFile(file2, "rw");
+
+                while ((len = raf1.read(bytes)) != -1){//读到文件末尾时，len返回-1，结束循环
+                    raf2.write(bytes, 0, len);
+                    if (raf2.length() > lon)//当生成的新文件字节数大于lon时，结束循环
+                        break;
+                }
+                raf2.close();
+            }
+            raf1.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+
+
+
+    public static Data count(String path,String filepath){
+        Data data=new Data();
+
+        String img1;String img2; String img3;
+
+        File file =new File(path);
+        try {
+            InputStream inputStream=new FileInputStream(file);
+            data.setHashvalue(Utils.HashCode(inputStream));
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        List<String> iamgespath= Utils.cut(path,filepath);
+        for ( int i=0;i<iamgespath.size();i++) {
+            System.out.println(iamgespath.get(i));
+            try {
+                Long value=    Utils.getCRC32(iamgespath.get(i));
+
+
+                System.out.println(value);
+                if (i==0){
+                    data.setCrca1(value);
+                }else if (i==1){
+                    data.setCrca2(value);
+                }else {
+                    data.setCrca2(value);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return  data;
+    }
+
+
+
 
     public static Long getCRC32(String filepath) throws IOException {
         CRC32 crc32 = new CRC32();
