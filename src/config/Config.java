@@ -8,4 +8,7 @@ package config;
 public class Config {
     public   static  final String  imgpath="res/image/test2.jpg";
     public   static final  String filepath="res/image/";
+
+    public  static  final  String  saveimgpath="res/saveimg/test2.jpg";
+    public  static  final  String savepath="res/saveimg/";
 }

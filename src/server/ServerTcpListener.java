@@ -58,8 +58,8 @@ public class ServerTcpListener  {
                     fos.write(inputByte, 0, length);
                     fos.flush();
                 }
-
-                Data data=Utils.count(Config.imgpath,Config.filepath);
+//                     传输后封装的sha1 crc值
+                Data data=Utils.count(Config.saveimgpath,Config.savepath);
                 System.out.println("完成接收");
             } finally {
                 if (fos != null)
