@@ -60,6 +60,12 @@ public class ServerTcpListener  {
                 }
 //                     传输后封装的sha1 crc值
                 Data data=Utils.count(Config.saveimgpath,Config.savepath);
+                System.out.println("\n");
+                System.out.println("接收到文件的杂凑函数值为"+data.getHashvalue());
+                System.out.println("接收到文件的第一个CRC值为"+data.getCrca1());
+                System.out.println("接收到文件的第二个CRC值为"+data.getCrca2());
+                System.out.println("接收到文件的第三个CRC值为"+data.getCrca3());
+
                 System.out.println("完成接收");
             } finally {
                 if (fos != null)
@@ -84,12 +90,18 @@ public class ServerTcpListener  {
                 // 获取客户端的请求数据
                 SendData info = GSONUtils.read(
                         byteArrayOutputStream.toByteArray(), SendData.class);
-                System.out.println("Client接收到Server发来的数据: "
+                System.out.println("\n");
+                System.out.println("Client发来的类型是数据: "
                         + info.getType());
+                System.out.println("Client发来的数据杂凑函数值是: "
+                        + ((Data)info.getObject()).getHashvalue());
+                System.out.println("Client发来的数据第一个CRC值是: "
+                        + ((Data)info.getObject()).getHashvalue());
+                System.out.println("Client发来的数据第二个CRC值是: "
+                        + ((Data)info.getObject()).getHashvalue());
+                System.out.println("Client发来的数据第三个CRC值是: "
+                        + ((Data)info.getObject()).getHashvalue());
 
-
-
-                
             }
 
         } catch (IOException e) {

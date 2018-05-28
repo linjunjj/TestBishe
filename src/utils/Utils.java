@@ -135,9 +135,6 @@ public class Utils {
 
     public static Data count(String path,String filepath){
         Data data=new Data();
-
-        String img1;String img2; String img3;
-
         File file =new File(path);
         try {
             InputStream inputStream=new FileInputStream(file);
@@ -151,9 +148,6 @@ public class Utils {
             System.out.println(iamgespath.get(i));
             try {
                 Long value=    Utils.getCRC32(iamgespath.get(i));
-
-
-                System.out.println(value);
                 if (i==0){
                     data.setCrca1(value);
                 }else if (i==1){
@@ -161,7 +155,8 @@ public class Utils {
                 }else {
                     data.setCrca2(value);
                 }
-
+              File file1=new File(iamgespath.get(i));
+                file1.delete();
             } catch (IOException e) {
                 e.printStackTrace();
             }

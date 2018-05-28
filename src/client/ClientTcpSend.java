@@ -40,6 +40,10 @@ public class ClientTcpSend {
                     dos.flush();
                 }
                 Data data=Utils.count(Config.imgpath,Config.filepath);
+                System.out.println("发送的杂凑函数值为"+data.getHashvalue());
+                System.out.println("发送的第一个CRC值为"+data.getCrca1());
+                System.out.println("发送的第二个CRC值为"+data.getCrca2());
+                System.out.println("发送的第三个CRC值为"+data.getCrca3());
                 SendData sendData=new SendData();
                 sendData.setObject(data);
                 sendData.setType(1);
@@ -52,6 +56,7 @@ public class ClientTcpSend {
                     fis.close();
                 if (socket != null)
                     socket.close();
+
             }
         } catch (Exception e) {
             e.printStackTrace();
